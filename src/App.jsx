@@ -9,21 +9,26 @@ function App() {
   function handleNumero(numero) {
     // No permitir múltiples ceros consecutivos al inicio
     if (displayNum === "0" && numero === "0") {
+      console.log("Numero consecutivo");
       return;
     }
     if (displayNum === "0" || operandi !== null) {
+      console.log("display 0 o no hay operandi");
       setDisplayNum(numero);
       setOperandi(null);
       // Si el displayNum es 0 o hay operator en state, asignar el valor del numero sin concatenar y borrar operador
     } else {
+      console.log("De mas numeros");
       setDisplayNum(displayNum + numero);
     }
   }
   function handleOperandi(operator) {
+    console.log(operator);
     // Si el primer numero es null, asignar el de display como el primer numero
     if (firstNum === null) {
       setFirstNum(parseFloat(displayNum));
-    } else if (operandi !== "=") {
+    } else {
+      console.log("cualquier operandi");
       // Realizar el cálculo si ya hay un operador y no es "="
       const result = calcularResultado(operator);
       // Asignar ambos, display y first numero el resultado de calculo
@@ -32,12 +37,11 @@ function App() {
     }
     setOperandi(operator);
   }
-  console.log(operandi);
-  function calcularResultado() {
+  function calcularResultado(operator) {
     // Convertir display numero string en numero numero y guardarlo
     const secondNum = parseFloat(displayNum);
 
-    switch (operandi) {
+    switch (operator) {
       case "+":
         return firstNum + secondNum;
       case "-":
@@ -50,18 +54,15 @@ function App() {
         return secondNum;
     }
   }
-
   function handleAC() {
     // Resetear los tres estado
     setDisplayNum("0");
     setFirstNum(null);
     setOperandi(null);
   }
-  function handleEqual(operator) {
+  function handleEqual() {
     // Si el primer num no es null y operandi no es null
-    console.log("sasa");
-    console.log(firstNum);
-    console.log(operator);
+    console.log(operandi);
     if (firstNum !== null && operandi !== null) {
       const result = calcularResultado();
       setDisplayNum(String(result));
@@ -69,7 +70,6 @@ function App() {
       setOperandi(null);
     }
   }
-
   return (
     <main className="container">
       <div id="display">{displayNum}</div>
@@ -90,7 +90,7 @@ function App() {
       <Button
         type="operandi"
         handleClick={handleOperandi}
-        value="x"
+        value="*"
         id="multiply"
         color="grey"
       />

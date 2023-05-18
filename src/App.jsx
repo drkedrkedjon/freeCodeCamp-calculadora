@@ -9,9 +9,6 @@ function App() {
   const [whatType, setWhatType] = useState("number");
   const [lastOperandi, setLastOperandi] = useState(null);
   const [panic, setPanic] = useState(false);
-  // console.log(lastOperandi);
-  // console.log(operandi);
-  // console.log(panic);
 
   function handleNumero(numero, type) {
     // Primero debe averiguar si display numeber es 0 y si mandamos 0 en tal caso no hacer nada
@@ -23,11 +20,14 @@ function App() {
 
     // f 2 or more operators are entered consecutively, the operation performed should be the last operator entered (excluding the negative (-) sign). For example, if 5 + * 7 = is entered, the result should be 35 (i.e. 5 * 7); if 5 * - 5 = is entered, the result should be -25 (i.e. 5 * (-5)).
     // "5 * - + 5" = should produce an output of "10"
+    // 3 + 5 * 6 - 2 / 4 should produce 32.5 or 11.5
 
-    const ultimoOperador = lastOperandi;
-    const actualOperador = operandi;
-
-    if (panic) {
+    if (panic && operandi === "-") {
+      console.log("PANIC actual operandi es -");
+      setDisplayNum(operandi + numero);
+      setOperandi(lastOperandi);
+      setPanic(false);
+      return;
     }
 
     if (displayNum === "0" && numero === "0") {
@@ -133,6 +133,7 @@ function App() {
     setFirstNum(null);
     setOperandi("=");
     setNewdisplay(false);
+    setWhatType("number");
   }
   return (
     <main className="container">

@@ -6,14 +6,29 @@ function App() {
   const [operandi, setOperandi] = useState(null);
   const [firstNum, setFirstNum] = useState(null);
   const [newDisplay, setNewdisplay] = useState(false);
+  const [whatType, setWhatType] = useState("number");
+  const [lastOperandi, setLastOperandi] = useState(null);
+  const [panic, setPanic] = useState(false);
+  // console.log(lastOperandi);
+  // console.log(operandi);
+  // console.log(panic);
 
-  function handleNumero(numero) {
+  function handleNumero(numero, type) {
     // Primero debe averiguar si display numeber es 0 y si mandamos 0 en tal caso no hacer nada
     // Si empezamos con 0 el numero que ponemos (4) debe ser puesto en display en lugar de 0 a no ser que se trata de decimal .
     // Si es decimal debe concatenarse
     // Si hay un decimal no debe poner el otro
     // Si es cualquer otro numero debe concatenarse
     // Si hay numero guardado sustituir el de display igual como si esta 0
+
+    // f 2 or more operators are entered consecutively, the operation performed should be the last operator entered (excluding the negative (-) sign). For example, if 5 + * 7 = is entered, the result should be 35 (i.e. 5 * 7); if 5 * - 5 = is entered, the result should be -25 (i.e. 5 * (-5)).
+    // "5 * - + 5" = should produce an output of "10"
+
+    const ultimoOperador = lastOperandi;
+    const actualOperador = operandi;
+
+    if (panic) {
+    }
 
     if (displayNum === "0" && numero === "0") {
       console.log("Zero consecutivo");
@@ -24,10 +39,10 @@ function App() {
     if (displayNum === "0" && numero === "." && !isThereDecimal) {
       console.log("Punto concatenado");
       setDisplayNum(displayNum + numero);
-    } else if (displayNum === "0" || newDisplay) {
+    } else if (displayNum === "0" || !newDisplay) {
       console.log("Numero 0 sustituido");
       setDisplayNum(numero);
-      // setNewdisplay(false);
+      setNewdisplay(true);
     } else if (numero === ".") {
       if (!isThereDecimal) {
         console.log("Added . en un numero normal");
@@ -37,22 +52,7 @@ function App() {
       console.log("numero concatenado");
       setDisplayNum(displayNum + numero);
     }
-
-    // // No permitir múltiples ceros consecutivos al inicio
-    // if (displayNum === "0" && numero === "0") {
-    //   console.log("Numero consecutivo");
-    //   return;
-    // }
-    // if (displayNum === "0" || control === false) {
-    //   console.log("display 0 o hay operandi");
-    //   setDisplayNum(numero);
-    //   setControl(true);
-    //   // Si el displayNum es 0 o hay operator en state, asignar el valor del numero sin concatenar y borrar operador
-    // } else {
-    //   console.log("De mas numeros");
-
-    //   setDisplayNum(displayNum + numero);
-    // }
+    setWhatType(type);
   }
   function calcularResultado(operator) {
     // Convertir display numero string en numero numero y guardarlo
@@ -71,26 +71,49 @@ function App() {
         return secondNum;
     }
   }
+  function handleOperandi(operator, type) {
+    // Function handleOperandi
+    //     Si numero guardado es null
+    // Añadir display número a número guardado
+    // Guardar operandi
+    // Resetear handleNúmeros para que empieza por un nuevo número. Hace falta un state para eso?
+    //      Si número guardado existe
+    // Usar operandi para hacer cálculo entre número guardado y el número en display.
+    // Número retornado del calculo guardar como número guardado
+    // Asignar este número retornado a display número
+    // Guardar operandi
+    // Resetear newDisplay para que empieza por un nuevo número. Hace falta un state para eso?
 
-  function handleOperandi(operator) {
-    // Si el primer numero es null, asignar el de display como el primer numero
-    if (firstNum === null) {
-      console.log("cargar primer numero");
-      setFirstNum(parseFloat(displayNum));
-      setOperandi(operator);
-      setNewdisplay(true);
-    } else {
-      console.log("cualquier operandi");
-      // Realizar el cálculo si ya hay un operador y no es "="
-      const result = calcularResultado(operator);
-      // Asignar ambos, display y first numero el resultado de calculo
-      setDisplayNum(result);
-      setFirstNum(result);
-      setNewdisplay(true);
+    // f 2 or more operators are entered consecutively, the operation performed should be the last operator entered (excluding the negative (-) sign). For example, if 5 + * 7 = is entered, the result should be 35 (i.e. 5 * 7); if 5 * - 5 = is entered, the result should be -25 (i.e. 5 * (-5)).
+    // "5 * - + 5" = should produce an output of "10"
+
+    if (whatType === "number") {
+      if (firstNum === null) {
+        console.log("Promer numero guardado");
+        setFirstNum(parseFloat(displayNum));
+        setOperandi(operator);
+        setNewdisplay(false);
+      } else {
+        const resultado = calcularResultado(operandi);
+        console.log("operacion calculadora terminada");
+        setDisplayNum(String(resultado));
+        setFirstNum(resultado);
+        setOperandi(operator);
+        setNewdisplay(false);
+      }
     }
-    setOperandi(operator);
+
+    // Si ultima tecla era operandi, cambiar operandi nada mas
+    // "5 * - + 5" = should produce an output of "10"
+
+    if (whatType === "operandi") {
+      console.log("cambio de operandi");
+      setLastOperandi(operandi);
+      setOperandi(operator);
+      setPanic(true);
+    }
+    setWhatType(type);
   }
-  console.log(operandi);
   function handleAC() {
     // Resetear los tres estado
     setDisplayNum("0");
@@ -98,14 +121,18 @@ function App() {
     setOperandi(null);
   }
   function handleEqual() {
-    // Si el primer num no es null y operandi no es null
-    console.log(operandi);
-    if (firstNum !== null && operandi !== null) {
-      const result = calcularResultado();
-      setDisplayNum(String(result));
-      setFirstNum(null);
-      setOperandi(null);
-    }
+    //     Function =
+    // Hacer calculus
+    // Presentar el resultado en display
+    // setOperator a =
+    // Pressing an operator immediately following = should start a new calculation that operates on the result of the previous evaluation
+    // console.log("Operacion = hecha");
+
+    const resultado = calcularResultado(operandi);
+    setDisplayNum(String(resultado));
+    setFirstNum(null);
+    setOperandi("=");
+    setNewdisplay(false);
   }
   return (
     <main className="container">
